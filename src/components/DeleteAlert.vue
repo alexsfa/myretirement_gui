@@ -4,7 +4,7 @@
         <h3 class="mb-7 text-3xl text-red-500 font-bold">{{ title }}</h3>
         <p class="mb-3"><strong>{{ message }}</strong></p>
         <div class=" space-x-2 mt-4 mb-4">
-            <button @click="deleteUser()" class="bg-blue-500 py-4 mt-2 px-6 text-white rounded-lg font-bold  hover:bg-green-400">
+            <button @click="confirmAction()" class="bg-blue-500 py-4 mt-2 px-6 text-white rounded-lg font-bold  hover:bg-green-400">
                 Yes
             </button>
             <button @click="$emit('close')"  class="bg-blue-500 py-4 mt-2 px-6 text-white rounded-lg font-bold  hover:bg-red-400">
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-    import {useUserStore} from '../stores/user'
-    import axios from 'axios'
 
     export default {
 
@@ -26,32 +24,14 @@
         props: {
             visible: { type: Boolean, required:true },
             title: { type: String },
-            message: { type: String }
-        },
-
-        data() {
-            return {
-                userStore: useUserStore()
-            }
+            message: { type: String },
+            onConfirm: { type: Function, required: true }
         },
 
         methods: {
-
-            async deleteUser() {
-                this.userStore.initStore()
-                console.log('Delete user')
-                try {
-                    await axios.delete('api/user/me/')
-
-                    this.userStore.removeToken()
-
-                    this.$router.push('/signup')
-
-                } catch {
-                    console.log('Delete error:', error)
-                }
-
-            }
+            confirmAction() {
+                this.onConfirm()
+            }      
         }
 }
 </script>

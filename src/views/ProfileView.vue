@@ -49,13 +49,16 @@
 
                 this.errors = []
 
-                if (!this.isValidEmail(this.form.email)) {
+                if (!this.form.email) {
+                    this.form.email = this.userStore.user.email
+                }else if (!this.isValidEmail(this.form.email)) {
                     this.errors.push('Please enter a valid email address.')
                 }
 
-                if (this.form.password.length === 0) {
+                if (this.form.password.length < 7) {
                     this.errors.push('You need a larger password')
                 }
+
 
                 if (this.errors.length === 0) {
 
@@ -82,14 +85,56 @@
                             console.log('error', error)
                         })
                     } else {
-                        console.log(this.emptyFields)
 
+                        // filters all the empty fields from the form
+                        const filteredForm = Object.fromEntries(
+                            Object.entries(this.form).filter(([key, value]) =>
+                                value !== null && value !== undefined && !(typeof value === 'string' && value.trim() === '') &&
+                                key !== 'email' && key !== 'password'
+                            )
+                        );
+
+                        console.log(filteredForm)
+
+                        if(!filteredForm.isEmpty)
+                            axios.patch('api/user/me/', filteredForm)
+                            .then(response => {
+                                if (response.data.message === "User information updated successfully.") {
+
+                                for (let key in filteredForm) {
+                                    this.form[key] = "";
+                                }
+
+                                this.userStore.setUserInfo(response.data.user);
+                                this.editing = false;
+                                } else {
+                                    console.log('Something went wrong');
+                                }
+                            })
+                            .catch(error => {
+                                console.log('error', error);
+                            });
                     }
                 }
             },
 
             deletionAlert() {
                 this.showDeleteAlert = true
+            },
+            
+            async deleteUser() {
+                console.log('Delete user')
+                try {
+                    await axios.delete('api/user/me/')
+
+                    this.userStore.removeToken()
+
+                    this.$router.push('/signup')
+
+                } catch(error) {
+                    console.log('Delete error:', error)
+                }
+
             },
 
             passwordCheck() {
@@ -122,6 +167,7 @@
       :visible="showDeleteAlert"
       title="Be careful!!"
       message="Are you sure that you want to delete your profile?"
+      :onConfirm="() => deleteUser()"
       @close="showDeleteAlert = false"
     />
 
@@ -193,6 +239,12 @@
                             <div class="w-px h-5 bg-gray-400"></div>
                             <input v-model="form.password" type='password' class='border border-blue-300 rounded-lg pl-1.5 pb-0.5' placeholder="Password"></input>
                         </div>
+
+                        <template v-if="errors && errors.length">
+                            <div class="bg-red-300 text-black font-bold rounded-lg p-6">
+                                <p v-for="error in errors" v-bind:key="error">{{ error }}</p>
+                            </div>
+                        </template>
 
                     </form>
 
