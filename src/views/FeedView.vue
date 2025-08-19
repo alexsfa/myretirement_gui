@@ -2,7 +2,7 @@
     import RequestTemplate from '../components/RequestTemplate.vue'
     import NotAuthAlert from '../components/NotAuthAlert.vue'
     import {useUserStore} from '../stores/user'
-    import axios from 'axios'
+    import api from "@/api"
     import DeleteAlert from '../components/DeleteAlert.vue'
 
     export default {
@@ -15,8 +15,28 @@
                 unauthorizedAlert: false,
                 deleteAlert: false,
                 requests: [],
-                requestToDeleteId: null
+                requestToDeleteId: null,
+                isExpanded: false
             }
+        },
+        
+        
+        // watch puts a listener to a ref in DOM
+        watch: {
+            requests: {
+                handler() {
+                    // nextTick() runs after the DOM gets updated
+                    this.$nextTick(() => {
+                        const wrapper = this.$refs.templateWrapper
+                        if (wrapper) {
+                            // checks if the height of requests' elements has expanded
+                            this.isExpanded = wrapper.scrollHeight > 700
+                        }
+                    });
+                },
+                immediate: true,
+                deep: true,
+            },
         },
 
         computed: {
@@ -35,7 +55,7 @@
             },
             async fetchRequests() {
                 try{
-                    const response = await axios.get('api/request/requests/')
+                    const response = await api.get('api/request/requests/')
                     this.requests = response.data
                     console.log(this.requests)
                 } catch(error) {
@@ -46,7 +66,7 @@
                 console.log('Delete request')
                 const url = 'api/request/requests/' + requestToDeleteId + "/"
                 try {
-                    await axios.delete(url)
+                    await api.delete(url)
                     this.deleteAlert = false;
                     this.requestToDeleteId = null;
                     await this.fetchRequests()
@@ -67,9 +87,9 @@
             this.token = this.userStore.user.access
 
             if(this.token) {
-                axios.defaults.headers.common["Authorization"] = "Token " + this.token
+                api.defaults.headers.common["Authorization"] = "Token " + this.token
             } else {
-                axios.defaults.headers.common["Authorization"] = ""
+                api.defaults.headers.common["Authorization"] = ""
                 this.handleNoToken()
             }
 
@@ -95,22 +115,25 @@
     />
 
 
-    <div class=" flex justify-center items-left h-[50.5rem]">
+    <div :class="[isExpanded ? 'h-auto' : 'h-[50.5rem]']" class=" flex justify-center items-left h-AUTO">
         <div >
             <div class="pl-20 pr-30 pt-5 pb-18 w-[100rem] space-y-4 bg-white border border-gray-200 rounded-lg">
                 <p class="text-xl mb-6 font-bold font-geologica text-blue-700">Requests</p>
                 
-                <div v-if="requests.length == 0"class="flex items-center justify-center">
+                <div v-if="requests.length == 0" class="flex items-center justify-center">
                     <p  class="text-xl mb-6 font-bold font-geologica text-blue-700"> There is no available requests</p>
                 </div>
                 
-                <RequestTemplate
-                    v-for="request in requests"
-                    v-if="requests.length != 0"
-                    :key="request.id"
-                    :requestData="request"
-                    :onDeleteButton="() => showDeleteAlert(request.id)"
-                />
+                <div ref="templateWrapper" class="flex flex-wrap justify-left items-center gap-8">
+                    <RequestTemplate
+                        v-for="request in requests"
+                        v-if="requests.length != 0"
+                        :key="request.id"
+                        :requestData="request"
+                        :onDeleteButton="() => showDeleteAlert(request.id)"
+                        :manualFetching="fetchRequests"
+                    />
+                </div>
 
             </div>
         </div>

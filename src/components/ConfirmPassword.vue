@@ -27,7 +27,7 @@
 
 <script>
     import {useUserStore} from '../stores/user'
-    import axios from 'axios'
+    import api from '@/api'
 
     export default {
 
@@ -65,7 +65,7 @@
 
                 if (this.errors.length === 0) {
                     try {
-                        const response = await axios.post('api/user/check-password/', this.form,
+                        const response = await api.post('api/user/check-password/', this.form,
                             {
                                 headers: {
                                     Authorization: `Token ${this.userStore.user.access}`

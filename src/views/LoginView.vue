@@ -1,5 +1,5 @@
 <script>
-    import axios from 'axios'
+    import api from '@/api'
     import {useUserStore} from '@/stores/user'
 
     export default {
@@ -38,11 +38,11 @@
 
                 if (this.errors.length === 0) {
                     try {
-                        const response = await axios.post('api/user/token/', this.form)
+                        const response = await api.post('api/user/token/', this.form)
                         this.user.setToken(response.data)
-                        axios.defaults.headers.common["Authorization"] = "Token " + response.data.token
+                        api.defaults.headers.common["Authorization"] = "Token " + response.data.token
 
-                        const userResponse = await axios.get('api/user/me/')
+                        const userResponse = await api.get('api/user/me/')
                         this.user.setUserInfo(userResponse.data)
                         this.$router.push('/')
                     } catch (error) {

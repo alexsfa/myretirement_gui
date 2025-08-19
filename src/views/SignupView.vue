@@ -1,6 +1,6 @@
 <script>
     import elderlyImage from '@/assets/images/elderly_couple_on_laptop.webp'
-    import axios from 'axios'
+    import api from '@/api'
 
     export default {
 
@@ -49,7 +49,7 @@
                 }
 
                 if (this.errors.length === 0) {
-                    axios.post('api/user/create/', this.form)
+                    api.post('api/user/create/', this.form)
                     .then(response => {
                         if (response.data.message === "User created successfully") {
 

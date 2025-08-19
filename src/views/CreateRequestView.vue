@@ -1,6 +1,6 @@
 
 <script>
-    import axios from 'axios'
+    import api from "@/api"
 
     export default {
 
@@ -30,7 +30,7 @@
                 }
 
                 if (this.errors.length === 0) {
-                    axios.post('api/request/requests/', this.form)
+                    api.post('api/request/requests/', this.form)
                     .then(response => {
                         if (response.data.message === "Request created successfully") {
 

@@ -2,7 +2,7 @@
     import DeleteAlert from '../components/DeleteAlert.vue'
     import PasswordAlert from '../components/ConfirmPassword.vue'
     import {useUserStore} from '../stores/user'
-    import axios from 'axios'
+    import api from '@/api'
 
     export default {
 
@@ -65,7 +65,7 @@
                     this.emptyFields = this.getEmptyFields(this.form)
 
                     if(this.emptyFields.length === 0) {
-                        axios.put('api/user/me/', this.form)
+                        api.put('api/user/me/', this.form)
                         .then(response => {
                             if (response.data.message === "User information updated successfully.") {
 
@@ -89,15 +89,14 @@
                         // filters all the empty fields from the form
                         const filteredForm = Object.fromEntries(
                             Object.entries(this.form).filter(([key, value]) =>
-                                value !== null && value !== undefined && !(typeof value === 'string' && value.trim() === '') &&
-                                key !== 'email' && key !== 'password'
+                                value !== null && value !== undefined && !(typeof value === 'string' && value.trim() === '') 
                             )
                         );
 
                         console.log(filteredForm)
 
                         if(!filteredForm.isEmpty)
-                            axios.patch('api/user/me/', filteredForm)
+                            api.patch('api/user/me/', filteredForm)
                             .then(response => {
                                 if (response.data.message === "User information updated successfully.") {
 
@@ -125,7 +124,7 @@
             async deleteUser() {
                 console.log('Delete user')
                 try {
-                    await axios.delete('api/user/me/')
+                    await api.delete('api/user/me/')
 
                     this.userStore.removeToken()
 

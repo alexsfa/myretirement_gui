@@ -13,9 +13,6 @@ import { useUserStore } from './stores/user'
 const app = createApp(App)
 const pinia = createPinia()
 
-// sets the baseURL for all the requests that will be sent by Axios
-axios.defaults.baseURL = 'http://127.0.0.1:8000'
-
 app.use(pinia)
 app.use(router, axios)
 
