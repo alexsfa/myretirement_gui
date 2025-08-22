@@ -30,7 +30,7 @@
                 }
 
                 if (this.errors.length === 0) {
-                    api.post('api/request/requests/', this.form)
+                    api.post('request/requests/', this.form)
                     .then(response => {
                         if (response.data.message === "Request created successfully") {
 

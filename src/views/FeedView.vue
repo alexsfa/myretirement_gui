@@ -55,7 +55,7 @@
             },
             async fetchRequests() {
                 try{
-                    const response = await api.get('api/request/requests/')
+                    const response = await api.get('request/requests/')
                     this.requests = response.data
                     console.log(this.requests)
                 } catch(error) {
@@ -64,7 +64,7 @@
             },
             async deleteRequest(requestToDeleteId) {
                 console.log('Delete request')
-                const url = 'api/request/requests/' + requestToDeleteId + "/"
+                const url = 'request/requests/' + requestToDeleteId + "/"
                 try {
                     await api.delete(url)
                     this.deleteAlert = false;

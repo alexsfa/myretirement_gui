@@ -65,7 +65,7 @@
 
                 if (this.errors.length === 0) {
                     try {
-                        const response = await api.post('api/user/check-password/', this.form,
+                        const response = await api.post('user/check-password/', this.form,
                             {
                                 headers: {
                                     Authorization: `Token ${this.userStore.user.access}`

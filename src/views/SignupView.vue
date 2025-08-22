@@ -49,7 +49,7 @@
                 }
 
                 if (this.errors.length === 0) {
-                    api.post('api/user/create/', this.form)
+                    api.post('user/create/', this.form)
                     .then(response => {
                         if (response.data.message === "User created successfully") {
 

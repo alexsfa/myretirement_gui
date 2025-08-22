@@ -65,7 +65,7 @@
                     this.emptyFields = this.getEmptyFields(this.form)
 
                     if(this.emptyFields.length === 0) {
-                        api.put('api/user/me/', this.form)
+                        api.put('user/me/', this.form)
                         .then(response => {
                             if (response.data.message === "User information updated successfully.") {
 
@@ -96,7 +96,7 @@
                         console.log(filteredForm)
 
                         if(!filteredForm.isEmpty)
-                            api.patch('api/user/me/', filteredForm)
+                            api.patch('user/me/', filteredForm)
                             .then(response => {
                                 if (response.data.message === "User information updated successfully.") {
 
@@ -124,7 +124,7 @@
             async deleteUser() {
                 console.log('Delete user')
                 try {
-                    await api.delete('api/user/me/')
+                    await api.delete('user/me/')
 
                     this.userStore.removeToken()
 

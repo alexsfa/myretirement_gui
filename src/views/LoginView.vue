@@ -38,11 +38,11 @@
 
                 if (this.errors.length === 0) {
                     try {
-                        const response = await api.post('api/user/token/', this.form)
+                        const response = await api.post('user/token/', this.form)
                         this.user.setToken(response.data)
                         api.defaults.headers.common["Authorization"] = "Token " + response.data.token
 
-                        const userResponse = await api.get('api/user/me/')
+                        const userResponse = await api.get('user/me/')
                         this.user.setUserInfo(userResponse.data)
                         this.$router.push('/')
                     } catch (error) {
