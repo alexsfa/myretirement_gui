@@ -1,17 +1,32 @@
 services:
-  vue_app:
-    container_name: vue
+  vue_dev:
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - VITE_API_URL=http://127.0.0.1:8000/api/
+      - VITE_API_URL={VITE_API_URL}
     ports: 
       - 5173:5173
     volumes:
       - .:/app  # every change of the current dir gets pulled by the container's workdir
       - /app/node_modules # isolates the node_modules inside and outside of our container
     command: "npm run dev -- --host 0.0.0.0 --port 5173"
+    profiles: ["dev"]
+    
+
+  vue_prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - VITE_API_URL={VITE_API_URL}
+    volumes:
+      - static-data:/vol/static  # copies Vue build output on a shared with nginx container volume
+    command: sh -c "npm run build && cp -r dist/* /vol/static/"
+    profiles: ["prod"]
+
+volumes:
+  static-data:
     
 networks:
   default:
