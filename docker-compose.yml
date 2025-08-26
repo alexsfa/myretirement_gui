@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - VITE_API_URL={VITE_API_URL}
+      - VITE_API_URL={{VITE_API_URL}}
     ports: 
       - 5173:5173
     volumes:
@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - VITE_API_URL={VITE_API_URL}
+      - VITE_API_URL={{VITE_API_URL}}
     volumes:
       - static-data:/vol/static  # copies Vue build output on a shared with nginx container volume
     command: sh -c "npm run build && cp -r dist/* /vol/static/"
