@@ -18,4 +18,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    host: '0.0.0.0',
+    hmr: {
+      host: env.dev.VITE_DEV_HOST || 'localhost', 
+      protocol: 'ws',
+    },
+  },
 })
+
+
