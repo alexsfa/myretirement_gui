@@ -25,11 +25,11 @@ export default defineConfig(({ mode }) => {
       hmr: {
         host: env.VITE_DEV_HOST || 'localhost', 
         protocol: 'ws',
-        port: 5173,
+        clientport: 5173,
       },
-      define: {
+    },
+    define: {
         'process.env': {}, // optional, sometimes needed for plugins that expect process.env
-      },
     },
   }
 })
