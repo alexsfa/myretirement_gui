@@ -27,6 +27,9 @@ export default defineConfig(({ mode }) => {
         protocol: 'ws',
         port: 5173,
       },
+      define: {
+        'process.env': {}, // optional, sometimes needed for plugins that expect process.env
+      },
     },
   }
 })
