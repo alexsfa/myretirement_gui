@@ -5,26 +5,28 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-// https://vite.dev/config/
-export default defineConfig({
-  
-  plugins: [
-    vue(),
-    vueDevTools(),
-    tailwindcss()
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
+    plugins: [
+      vue(),
+      vueDevTools(),
+      tailwindcss()
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      },
     },
-  },
-  server: {
-    host: '0.0.0.0',
-    hmr: {
-      host: env.dev.VITE_DEV_HOST || 'localhost', 
-      protocol: 'ws',
+    server: {
+      host: '0.0.0.0',
+      hmr: {
+        host: env.VITE_DEV_HOST || 'localhost', // ✅ now works
+        protocol: 'ws',
+      },
     },
-  },
+  }
 })
 
 
