@@ -1,11 +1,11 @@
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(({ mode, loadEnv }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   return {
@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => {
     server: {
       host: '0.0.0.0',
       hmr: {
-        host: env.VITE_DEV_HOST || 'localhost', // ✅ now works
+        host: env.VITE_DEV_HOST || 'localhost', 
         protocol: 'ws',
       },
     },
